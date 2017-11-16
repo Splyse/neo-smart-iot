@@ -1,0 +1,59 @@
+<%
+/**
+ * views/partials/navbar.ejs
+ *
+ * The navbar at the top of the page.
+ *
+ * @needs {Dictionary} currentUser
+ *   @property {Boolean} isLoggedIn
+ *   @property {String} username
+ */
+ %>
+<div class="topnav">
+    <img src="neo-48.png"><div class="logo">Neo Smart IoT</div>
+      <% if (req.session.me) { %>
+        <% if (req.session.isOwner) { %>
+      <div class="status">
+          Logged in as owner<br><br>
+          <div id='neolinkStatus'>
+
+          </div>
+       </div>
+        <% } else { %>
+      <div class="status">
+          Logged in as user<br><br>
+      </div>
+        <% } %>
+      <a href="/">Home</a>
+      <a href="/listContracts">Contracts</a>
+      <a href="/logout">Logout</a>
+      <% } else { %>
+      <a href="/login">Login</a> | <a href="/signup">Signup</a>
+      <% } %>
+</div>
+<br>
+
+<script>
+// This event listener communicates with neo link, if available,
+// and provides feedback status to the dapp page
+window.addEventListener("load", function(event) {
+   console.log("All resources finished loading!");
+
+   window.addEventListener("message", (msg) => {
+     console.log('in devices page: received: '+msg.data)
+
+     var status = 'Neolink Status:<br> Not Installed'
+
+     if (msg.data.extensionInstalled) status = 'NeoLink Status: Online'
+
+     if (msg.data.loggedIn)  status = 'NeoLink Status:<br> Wallet is Open'
+     else status = 'NeoLink Status:<br> Open a Wallet'
+
+     console.log("status: "+status)
+     document.getElementById("neolinkStatus").innerHTML = status
+
+     if (msg.data.result) document.getElementById('txResult').innerHTML = msg.data.result
+
+   }, false);
+ });
+</script>

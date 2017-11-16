@@ -1,0 +1,84 @@
+<link rel="stylesheet" href="/styles/contract.css">
+<link rel="stylesheet" href="/styles/nav.css">
+<%- include ../partials/navbar.ejs %>
+
+<div class="add-page">
+<div class="form">
+<h2>Add Contract</h2>
+<form action="/addContract" method="post">
+  <input name="name" type="text"/ placeholder="Name">
+  <input name="description" type="text"/ placeholder="Description">
+  <input name="scriptHash" type="text"/ placeholder="Script hash">
+  <button>Add Contract</button>
+</form>
+</div>
+</div>
+<div class="contract-page">
+<div class="form">
+<h2> Contracts </h2>
+
+<% if (contracts) { %>
+<table>
+ <tr>
+   <th></th>
+   <th></th>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Script Hash</th>
+    <!-- <th>Wallet Address</th> -->
+</tr>
+   <% contracts.forEach(function(contract) {%>
+    <tr data-id="<%= contract.id %>" data-model="contract">
+      <td>
+        <form method="post">
+          <button type="submit" formaction="/contract/delete/<%= contract.id %>">Delete</button>
+        </form>
+      </td>
+      <td>
+        <form method="post">
+          <button type="submit" formaction="/contract/detail/<%= contract.id %>">Edit</button>
+        </form>
+      </td>
+      <!-- <td>
+        <form method="get">
+          <button type="submit" formaction="/addContract?<%= contract.id %>">Add Action</button>
+        </form>
+      </td>
+      <td>
+        <form method="get">
+          <button type="submit" formaction="/delContract?<%= contract.id %>">Delete Action</button>
+        </form>
+      </td>
+      <td>
+        <form method="get">
+          <button type="submit" formaction="/getPrice?<%= contract.id %>">Get Price</button>
+        </form>
+      </td>
+      <td>
+        <form method="get">
+          <button type="submit" formaction="/setPrice?<%= contract.id %>">Set Price:</button>
+          <input name="price" type="text"/>
+        </form>
+      </td> -->
+        <td>
+            <%= contract.id %>
+        </td>
+        <td>
+            <%= contract.name %>
+        </td>
+        <td>
+            <%= contract.description %>
+        </td>
+        <td>
+            <!-- <a href="/contract/detail/<%= contract.id %>"><%= contract.scriptHash %></a> -->
+            <%= contract.scriptHash %>
+        </td>
+        <!-- <td>
+            <%= contract.walletAddress %>
+        </td> -->
+    </tr>
+    <% }) %>
+</table>
+<% } %>
+</div>

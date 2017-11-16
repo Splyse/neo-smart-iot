@@ -1,0 +1,83 @@
+<link rel="stylesheet" href="/styles/main.css">
+<link rel="stylesheet" href="/styles/nav.css">
+<%- include partials/navbar.ejs %>
+<div class="device-page">
+<div class="form">
+
+<h2>Devices</h2>
+
+<% if (actions) { %>
+  <table>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Description
+      </th>
+      <th>
+        Type
+      </th>
+      <th>
+        Price
+      </th>
+    </tr>
+    <% actions.forEach(function(action) {%>
+    <tr>
+      <td>
+        <%= action.name %>
+      </td>
+      <td>
+        <%= action.description %>
+      </td>
+      <td>
+        <%= action.type %>
+      </td>
+      <td>
+        <%= action.price %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+        <!-- <form> -->
+          <input type='text' id='actionPayInput_<%= action.id %>' placeholder="setting"/>
+          <button id="actionPayButton_<%= action.id %>">Pay</button>
+        <!-- </form> -->
+        <script>
+          function hexToRgb(hex) {
+              var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+              return result ? {
+                  r: parseInt(result[1], 16),
+                  g: parseInt(result[2], 16),
+                  b: parseInt(result[3], 16)
+              } : null;
+          }
+
+          document.getElementById("actionPayButton_<%= action.id %>").addEventListener("click",
+              function() {
+                var actionValue = document.getElementById("actionPayInput_<%= action.id %>").value
+
+                var actionPack = {
+                  'scriptHash': '<%= action.scriptHash %>',
+                  'operation': 'putvalue',
+                  'arg1': 'test',
+                  'arg2': actionValue,
+                  'assetType': 'GAS',
+                  'assetAmount': '<%= action.price %>'
+                }
+                window.postMessage({ type: "FROM_PAGE", text: actionPack }, "*");
+          }, false);
+        </script>
+
+      </td>
+    </tr>
+    <% }) %>
+    <tr>
+      <td>
+        <div id='txResult'></div>
+      </td>
+    </tr>
+  </table>
+<% } %>
+</div>
+</div>

@@ -1,0 +1,159 @@
+<link rel="stylesheet" href="/styles/contract.css">
+<link rel="stylesheet" href="/styles/nav.css">
+<%- include ../partials/navbar.ejs %>
+<div class="contract-page">
+<div class="form">
+<h2> Contract Details </h2>
+
+<% if (contract) { %>
+<table>
+ <tr>
+   <th></th>
+   <th></th>
+    <th>Contract ID</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Script Hash</th>
+    <!-- <th>Wallet Address</th> -->
+</tr>
+    <tr data-id="<%= contract.id %>" data-model="contract">
+      <td>
+        <form method="post">
+          <button type="submit" formaction="/contract/delete/<%= contract.id %>">Delete</button>
+        </form>
+      </td>
+      <td>
+      <!-- <td>
+        <form method="get">
+          <button type="submit" formaction="/addContract?<%= contract.id %>">Add Action</button>
+        </form>
+      </td>
+      <td>
+        <form method="get">
+          <button type="submit" formaction="/delContract?<%= contract.id %>">Delete Action</button>
+        </form>
+      </td>
+      <td>
+        <form method="get">
+          <button type="submit" formaction="/getPrice?<%= contract.id %>">Get Price</button>
+        </form>
+      </td>
+      <td>
+        <form method="get">
+          <button type="submit" formaction="/setPrice?<%= contract.id %>">Set Price:</button>
+          <input name="price" type="text"/>
+        </form>
+      </td> -->
+        <td>
+            <%= contract.id %>
+        </td>
+        <td>
+            <%= contract.name %>
+        </td>
+        <td>
+            <%= contract.description %>
+        </td>
+        <td>
+            <!-- <a href="/contract/detail/<%= contract.id %>"><%= contract.scriptHash %></a> -->
+            <%= contract.scriptHash %>
+        </td>
+        <!-- <td>
+            <%= contract.walletAddress %>
+        </td> -->
+    </tr>
+</table>
+</div>
+</div>
+<div class="add-page">
+<div class="form">
+<h2>Add Action</h2>
+<form action="/action/add/<%= contract.id %>" method="post">
+  <input name="name" type="text"/ placeholder="Name">
+  <input name="description" type="text"/ placeholder="Description">
+  <input name="type" type="text"/ placeholder="Type">
+  <input name="price" type="text"/ placeholder="Price">
+  <input name="scriptHash" value="<%= contract.scriptHash %>" type="hidden">
+  <button type="submit">Add Action</button>
+</form>
+</div>
+</div>
+<div class="contract-page">
+<div class="form">
+<h2>Actions for this Contract</h2>
+<% if (actions) { %>
+  <table>
+    <tr>
+      <th>
+      </th>
+      <th>
+      </th>
+      <th>
+        Action Id
+      </th>
+      <th>
+        Action Name
+      </th>
+      <th>
+        Action Description
+      </th>
+      <th>
+        Action Type
+      </th>
+      <th>
+        Action Price
+      </th>
+    </tr>
+    <% actions.forEach(function(action) {%>
+    <tr>
+      <td>
+        <form method="post">
+          <!-- <button id="actionBuyButton" type="submit" formaction="/action/buy/<%= action.id %>/<%= contract.id %>">Buy</button> -->
+          <button id="actionPayButton_<%= action.id %>">Pay</button>
+          <input type='text' id='actionPayInput_<%= action.id %>'/>
+        </form>
+        <script>
+          document.getElementById("actionPayButton_<%= action.id %>").addEventListener("click",
+              function() {
+                var actionValue = 'test'
+                var actionValue = document.getElementById("actionPayInput_<%= action.id %>").value
+                console.log('actionValue: '+actionValue)
+                var actionPack = {
+                  'scriptHash': '<%= contract.scriptHash %>',
+                  'operation': 'putvalue',
+                  'arg1': 'test',
+                  'arg2': actionValue,
+                  'assetType': 'GAS',
+                  'assetAmount': '<%= action.price %>'
+                }
+                window.postMessage({ type: "FROM_PAGE", text: actionPack }, "*");
+          }, false);
+        </script>
+      </td>
+      <td>
+        <form method="post">
+          <button type="submit" formaction="/action/delete/<%= action.id %>/<%= contract.id %>">Delete</button>
+        </form>
+      </td>
+      <td>
+        <%= action.id %>
+      </td>
+      <td>
+        <%= action.name %>
+      </td>
+      <td>
+        <%= action.description %>
+      </td>
+      <td>
+        <%= action.type %>
+      </td>
+      <td>
+        <%= action.price %>
+      </td>
+    </tr>
+    <% }) %>
+
+  </table>
+<% } %>
+<% } %>
+</div>
+</div>

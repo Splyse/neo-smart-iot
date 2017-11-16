@@ -1,0 +1,15 @@
+<link rel="stylesheet" href="/styles/login.css">
+<link rel="stylesheet" href="/styles/nav.css">
+
+<%- include ../partials/navbar.ejs %>
+
+<div class="login-page">
+<div class="form">
+<form class="login-form" action="/signup" method="post">
+  <input name="name" type="text" placeholder="Name"/>
+  <input name="email" type="text" placeholder="Email"/>
+  <input name="password" type="password" placeholder="Password"/>
+  <button>register</button>
+</form>
+</div>
+</div>
