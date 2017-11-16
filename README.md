@@ -43,7 +43,7 @@ Check out a video demonstration of the complete system over at the
 
   2. Ensure that a wallet is open in NeoLink.
 
-  3. Go to https://iot.splyse.tech
+  3. Go to https://iot.splyse.tech/
 
   4. Login with:
 
