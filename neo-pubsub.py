@@ -17,10 +17,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 About
 -----
 
-This script acts as a standalone neo-python node/MQTT pubsub server. It listens for Runtime.Notify
-events and publishes them to the MQTT queue to broadcast to subscribing clients such as IOT devices.
-It is intended to run inside the ./contrib directory of a fully configured neo-python installation.
-(Due to limitations of LevelDB, it is not possible to run prompt.py while this script is running)
+This script acts as a standalone neo-python node/MQTT pubsub server. It listens 
+for Runtime.Notify events and publishes them to the MQTT queue to broadcast to 
+subscribing clients such as IOT devices.
+
+It is intended to run inside the ./contrib directory of a fully configured 
+neo-python installation. (Due to limitations of LevelDB, it is not possible to 
+run prompt.py while this script is running)
 
 ------------
 Installation
@@ -49,6 +52,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.insert(0, parent_dir)
 
+from contrib.smartcontract import SmartContract
 from neo.Network.NodeLeader import NodeLeader
 from twisted.internet import reactor, task
 from neo.Core.Blockchain import Blockchain, Events
@@ -56,7 +60,16 @@ from neo.SmartContract.StateReader import StateReader
 from neo.Implementations.Blockchains.LevelDB.LevelDBBlockchain import LevelDBBlockchain
 from neo.Settings import settings
 
-watched_scripthashes = ['b3a14d99a3fb6646c78bf2f4e2f25a7964d2956a']
+smart_contract = SmartContract("b3a14d99a3fb6646c78bf2f4e2f25a7964d2956a")
+
+@smart_contract.on_notify
+def sc_notify(event):
+    if len(event.event_payload):
+        #sender = event.event_payload[0].decode("utf-8")
+        key = event.event_payload[1].decode("utf-8")
+        pub = b'::'.join([binascii.unhexlify(item.decode()) for item in event.event_payload[2:]])
+        print("**** NOTIFY: {}/{}/{}".format(event.contract_hash, key, pub))
+        publish.single("Neo/{}/{}".format(event.contract_hash, key), payload=pub)
 
 config = {
     'listeners': {
@@ -102,6 +115,7 @@ def acl_handle_publish(self, publish_packet: PublishPacket):
         pass
     else:
         print("PUBLISH {} from {} blocked!".format(publish_packet.data, peer))
+        raise Exception("denied")
         return
 
 
@@ -153,7 +167,7 @@ def main():
     logging.basicConfig(level=logging.INFO, format=formatter)
 
     print("Installing Runtime.Notify event handler")
-    StateReader.NotifyEvent.on_change += on_notify
+    #StateReader.NotifyEvent.on_change += on_notify
     hbmqtt.mqtt.protocol.handler.ProtocolHandler.handle_publish = prefix_function(
         hbmqtt.mqtt.protocol.handler.ProtocolHandler.handle_publish, acl_handle_publish)
 
