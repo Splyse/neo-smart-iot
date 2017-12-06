@@ -1,7 +1,7 @@
 {
   "name": "neo-smart-iot-api",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Neo Smart IoT API",
   "keywords": [],
   "dependencies": {
