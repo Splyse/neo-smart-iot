@@ -30,7 +30,7 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Splyse/neo-smart-iot"
   },
   "author": "Splyse, Inc.",
   "license": ""
