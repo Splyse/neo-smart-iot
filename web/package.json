@@ -5,7 +5,7 @@
   "description": "Neo Smart IoT API",
   "keywords": [],
   "dependencies": {
-    "ejs": "~0.8.4",
+    "ejs": "~2.5.5",
     "grunt": "0.4.2",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-coffee": "~0.10.1",
