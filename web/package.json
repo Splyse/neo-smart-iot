@@ -30,7 +30,7 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mikermcneil/using-passport.git"
+    "url": ""
   },
   "author": "Splyse, Inc.",
   "license": ""
